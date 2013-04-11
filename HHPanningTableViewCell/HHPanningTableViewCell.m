@@ -123,6 +123,9 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	if ([super respondsToSelector:@selector(awakeFromNib)]) {
 		[super awakeFromNib];
 	}
+    [self.drawerView removeFromSuperview];
+    self.rightDrawerView.hidden = YES;
+    self.leftDrawerView.hidden = YES;
 }
 
 - (void)prepareForReuse
@@ -193,6 +196,8 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 #pragma mark Accessors
 
 @synthesize drawerView = _drawerView;
+@synthesize leftDrawerView = _leftDrawerView;
+@synthesize rightDrawerView = _rightDrawerView;
 
 @synthesize directionMask = _directionMask;
 @synthesize shouldBounce = _shouldBounce;
@@ -208,6 +213,35 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 @synthesize panOriginX = _panOriginX;
 @synthesize panning = _panning;
+
+- (void)setDrawerView:(UIView *)drawerView
+{
+    _drawerView = drawerView;
+    self.leftDrawerView = nil;
+    self.rightDrawerView = nil;
+}
+
+- (void)setLeftDrawerView:(UIView *)leftDrawerView
+{
+    _leftDrawerView = leftDrawerView;
+    if (leftDrawerView != nil) {
+        if (_drawerView == nil) {
+            _drawerView = [[UIView alloc] initWithFrame:leftDrawerView.bounds];
+        }
+        [_drawerView addSubview:leftDrawerView];
+    }
+}
+
+- (void)setRightDrawerView:(UIView *)rightDrawerView
+{
+    _rightDrawerView = rightDrawerView;
+    if (rightDrawerView != nil) {
+        if (_drawerView == nil) {
+            _drawerView = [[UIView alloc] initWithFrame:rightDrawerView.bounds];
+        }
+        [_drawerView addSubview:rightDrawerView];
+    }
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -295,9 +329,11 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	if (revealed) {
 		if (direction == HHPanningTableViewCellDirectionRight) {
 			frame.origin.x = bounds.origin.x + bounds.size.width;
+            self.leftDrawerView.hidden = NO;
 		}
 		else {
 			frame.origin.x = bounds.origin.x - bounds.size.width;
+            self.rightDrawerView.hidden = NO;
 		}
 
 		self.animationInProgress = YES;
@@ -335,6 +371,9 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
         void (^completion)(BOOL finished) = ^(BOOL finished) {
             [drawerView removeFromSuperview];
+            self.rightDrawerView.hidden = YES;
+            self.leftDrawerView.hidden = YES;
+            
             [shadowView removeFromSuperview];
 
             self.animationInProgress = NO;
@@ -626,14 +665,14 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	CGRect shadowFrame = containerFrame;
 
 	shadowFrame.size.width *= 2.0;
-    
+
 	if (containerFrame.origin.x < cellBounds.origin.x) {
         shadowFrame.origin.x = containerFrame.origin.x + containerFrame.size.width;
 	}
 	else {
         shadowFrame.origin.x = containerFrame.origin.x - shadowFrame.size.width;
 	}
-    
+
 	[shadowView setFrame:shadowFrame];
 }
 

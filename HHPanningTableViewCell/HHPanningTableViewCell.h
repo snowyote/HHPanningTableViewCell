@@ -45,6 +45,8 @@ typedef enum {
 
 
 @property (nonatomic, strong)	IBOutlet	UIView*								drawerView;
+@property (nonatomic, strong)	IBOutlet	UIView*								leftDrawerView;
+@property (nonatomic, strong)	IBOutlet	UIView*								rightDrawerView;
 
 @property (nonatomic, assign)				NSInteger							directionMask;
 @property (nonatomic, assign)				BOOL								shouldBounce;
