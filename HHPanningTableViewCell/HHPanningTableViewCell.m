@@ -110,6 +110,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 	self.directionMask = 0;
 	self.shouldBounce = YES;
+    self.boundPanByDrawerSize = NO;
 
     self.minimumPan = HH_PANNING_MINIMUM_PAN;
     self.maximumPan = HH_PANNING_MAXIMUM_PAN;
@@ -138,6 +139,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
     self.directionMask = 0;
 	self.shouldBounce = YES;
+    self.boundPanByDrawerSize = NO;
 
     self.drawerRevealed = NO;
     self.animationInProgress = NO;
@@ -201,6 +203,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 @synthesize directionMask = _directionMask;
 @synthesize shouldBounce = _shouldBounce;
+@synthesize boundPanByDrawerSize = _boundPanByDrawerSize;
 @synthesize minimumPan = _minimumPan;
 @synthesize maximumPan = _maximumPan;
 
@@ -328,11 +331,15 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 	if (revealed) {
 		if (direction == HHPanningTableViewCellDirectionRight) {
-			frame.origin.x = bounds.origin.x + bounds.size.width;
+            CGFloat ofs = self.boundPanByDrawerSize ? self.leftDrawerView.bounds.size.width : bounds.size.width;
+            
+			frame.origin.x = bounds.origin.x + ofs;
             self.leftDrawerView.hidden = NO;
 		}
 		else {
-			frame.origin.x = bounds.origin.x - bounds.size.width;
+            CGFloat ofs = self.boundPanByDrawerSize ? self.rightDrawerView.bounds.size.width : bounds.size.width;
+
+			frame.origin.x = bounds.origin.x - ofs;
             self.rightDrawerView.hidden = NO;
 		}
 
@@ -343,7 +350,9 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
         };
 
         void (^completion)(BOOL finished) = ^(BOOL finished) {
-            [containerView removeFromSuperview];
+            if (!self.boundPanByDrawerSize) {
+                [containerView removeFromSuperview];
+            }
 
             self.animationInProgress = NO;
         };
@@ -508,7 +517,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 		NSInteger directionMask = self.directionMask;
 		CGFloat leftLimit = (directionMask & HHPanningTableViewCellDirectionLeft) ? (-1.0 * width) : 0.0f;
 		CGFloat rightLimit = (directionMask & HHPanningTableViewCellDirectionRight) ? width : 0.0f;
-
+        
 		if (containerViewFrame.origin.x <= leftLimit) {
 			containerViewFrame.origin.x = leftLimit;
 		}
