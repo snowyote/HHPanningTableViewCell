@@ -525,6 +525,9 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 			containerViewFrame.origin.x = rightLimit;
 		}
 
+        self.leftDrawerView.hidden = (containerViewFrame.origin.x < 0);
+        self.rightDrawerView.hidden = (containerViewFrame.origin.x > 0);
+
 		[containerView setFrame:containerViewFrame];
 	}
     else if ((state == UIGestureRecognizerStateEnded) || (state == UIGestureRecognizerStateCancelled)) {
