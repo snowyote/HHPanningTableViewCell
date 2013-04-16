@@ -340,11 +340,13 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
             
 			frame.origin.x = bounds.origin.x + ofs;
             self.leftDrawerView.hidden = NO;
+            self.rightDrawerView.hidden = YES;
 		}
 		else {
             CGFloat ofs = self.boundPanByDrawerSize ? self.rightDrawerView.bounds.size.width : bounds.size.width;
 
 			frame.origin.x = bounds.origin.x - ofs;
+            self.leftDrawerView.hidden = YES;
             self.rightDrawerView.hidden = NO;
 		}
 
