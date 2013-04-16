@@ -146,6 +146,10 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
     self.panOriginX = 0.0f;
     self.panning = NO;
+
+    [self.drawerView removeFromSuperview];
+    self.rightDrawerView.hidden = YES;
+    self.leftDrawerView.hidden = YES;
 }
 
 - (UIView*)createContainerView
@@ -229,7 +233,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
     _leftDrawerView = leftDrawerView;
     if (leftDrawerView != nil) {
         if (_drawerView == nil) {
-            _drawerView = [[UIView alloc] initWithFrame:leftDrawerView.bounds];
+            _drawerView = [[UIView alloc] initWithFrame:self.bounds];
         }
         [_drawerView addSubview:leftDrawerView];
     }
@@ -240,7 +244,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
     _rightDrawerView = rightDrawerView;
     if (rightDrawerView != nil) {
         if (_drawerView == nil) {
-            _drawerView = [[UIView alloc] initWithFrame:rightDrawerView.bounds];
+            _drawerView = [[UIView alloc] initWithFrame:self.bounds];
         }
         [_drawerView addSubview:rightDrawerView];
     }
