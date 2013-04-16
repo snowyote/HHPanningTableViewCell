@@ -106,7 +106,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	self.shadowView = [self createShadowView];
 	self.panGestureRecognizer = [self createPanGesureRecognizer];
 
-	[self.containerView addGestureRecognizer:self.panGestureRecognizer];
+	[self addGestureRecognizer:self.panGestureRecognizer];
 
 	self.directionMask = 0;
 	self.shouldBounce = YES;
@@ -183,6 +183,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 																										  action:@selector(gestureRecognizerDidPan:)];
 
 	gestureRecognizer.direction = HHDirectionPanGestureRecognizerHorizontal;
+    gestureRecognizer.delegate = self;
 
 	return gestureRecognizer;
 }
@@ -442,6 +443,11 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 #pragma mark -
 #pragma mark Gesture recognizer
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+	return YES;
+}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch
 {
