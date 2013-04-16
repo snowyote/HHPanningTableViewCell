@@ -106,7 +106,7 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	self.shadowView = [self createShadowView];
 	self.panGestureRecognizer = [self createPanGesureRecognizer];
 
-	[self addGestureRecognizer:self.panGestureRecognizer];
+	[self.containerView addGestureRecognizer:self.panGestureRecognizer];
 
 	self.directionMask = 0;
 	self.shouldBounce = YES;
