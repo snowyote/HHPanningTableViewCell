@@ -60,8 +60,6 @@
 - (UIView*)createShadowView;
 - (UIPanGestureRecognizer*)createPanGesureRecognizer;
 
-- (void)setDrawerRevealed:(BOOL)revealed direction:(HHPanningTableViewCellDirection)direction animated:(BOOL)animated;
-
 - (void)updateShadowFrame;
 
 @end
