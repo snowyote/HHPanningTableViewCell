@@ -150,6 +150,16 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
     self.leftDrawerView.hidden = YES;
 }
 
+- (CGFloat)containerOriginLeft
+{
+    return self.boundPanByDrawerSize ? -self.rightDrawerView.bounds.size.width : -self.bounds.size.width;
+}
+
+- (CGFloat)containerOriginRight;
+{
+    return self.boundPanByDrawerSize ? self.leftDrawerView.bounds.size.width : self.bounds.size.width;
+}
+
 - (UIView*)createContainerView
 {
 	UIView* containerView = [[UIView alloc] initWithFrame:self.bounds];
@@ -334,16 +344,12 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 	if (revealed) {
 		if (direction == HHPanningTableViewCellDirectionRight) {
-            CGFloat ofs = self.boundPanByDrawerSize ? self.leftDrawerView.bounds.size.width : bounds.size.width;
-            
-			frame.origin.x = bounds.origin.x + ofs;
+			frame.origin.x = [self containerOriginRight];
             self.leftDrawerView.hidden = NO;
             self.rightDrawerView.hidden = YES;
 		}
 		else {
-            CGFloat ofs = self.boundPanByDrawerSize ? self.rightDrawerView.bounds.size.width : bounds.size.width;
-
-			frame.origin.x = bounds.origin.x - ofs;
+			frame.origin.x = [self containerOriginLeft];
             self.leftDrawerView.hidden = YES;
             self.rightDrawerView.hidden = NO;
 		}
@@ -618,10 +624,10 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
 		if (self.drawerRevealed) {
 			if (containerFrame.origin.x > cellBounds.origin.x) {
-				containerFrame.origin.x = cellBounds.origin.x + cellBounds.size.width;
+				containerFrame.origin.x = [self containerOriginRight];
 			}
 			else {
-				containerFrame.origin.x = cellBounds.origin.x - cellBounds.size.width;
+				containerFrame.origin.x = [self containerOriginLeft];
 			}
 
 			[containerView setFrame:containerFrame];
