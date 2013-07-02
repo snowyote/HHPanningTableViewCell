@@ -649,6 +649,13 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 		}
 	}
 
+    // on iOS7, there's a UITableViewCellScrollView inside the UITableViewCell
+    // that can't be reparented, so we leave it alone.
+    static Class tableCellScrollViewClass = nil;
+    if (tableCellScrollViewClass == nil) {
+        tableCellScrollViewClass = NSClassFromString(@"UITableViewCellScrollView");
+    }
+
 	// Move other subviews. E.g. drag reorder control
 	for (UIView *subview in [self.subviews reverseObjectEnumerator]) {
 		if (subview == containerView) {
@@ -674,6 +681,10 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 		if (subview == contentView) {
 			continue;
 		}
+
+        if (tableCellScrollViewClass && [subview isKindOfClass:tableCellScrollViewClass]) {
+            continue;
+        }
 
 		[containerView insertSubview:subview atIndex:0];
 	}
