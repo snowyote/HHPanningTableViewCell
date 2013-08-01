@@ -117,14 +117,19 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	[self addObserver:self forKeyPath:@"containerView.frame" options:0 context:(__bridge void *)kContainerFrameContext];
 }
 
+- (void)setDrawer:(HHPanningTableViewCellDirection)direction hidden:(BOOL)hidden
+{
+    (direction == HHPanningTableViewCellDirectionLeft ? self.leftDrawerView : self.rightDrawerView).hidden = hidden;
+}
+
 - (void)awakeFromNib
 {
 	if ([super respondsToSelector:@selector(awakeFromNib)]) {
 		[super awakeFromNib];
 	}
     [self.drawerView removeFromSuperview];
-    self.rightDrawerView.hidden = YES;
-    self.leftDrawerView.hidden = YES;
+    [self setDrawer:HHPanningTableViewCellDirectionLeft hidden:YES];
+    [self setDrawer:HHPanningTableViewCellDirectionRight hidden:YES];
 }
 
 - (void)prepareForReuse
@@ -146,8 +151,8 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
     self.panning = NO;
 
     [self.drawerView removeFromSuperview];
-    self.rightDrawerView.hidden = YES;
-    self.leftDrawerView.hidden = YES;
+    [self setDrawer:HHPanningTableViewCellDirectionLeft hidden:YES];
+    [self setDrawer:HHPanningTableViewCellDirectionRight hidden:YES];
 }
 
 - (CGFloat)containerOriginLeft
@@ -345,13 +350,13 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 	if (revealed) {
 		if (direction == HHPanningTableViewCellDirectionRight) {
 			frame.origin.x = [self containerOriginRight];
-            self.leftDrawerView.hidden = NO;
-            self.rightDrawerView.hidden = YES;
+            [self setDrawer:HHPanningTableViewCellDirectionLeft hidden:NO];
+            [self setDrawer:HHPanningTableViewCellDirectionRight hidden:YES];
 		}
 		else {
 			frame.origin.x = [self containerOriginLeft];
-            self.leftDrawerView.hidden = YES;
-            self.rightDrawerView.hidden = NO;
+            [self setDrawer:HHPanningTableViewCellDirectionLeft hidden:YES];
+            [self setDrawer:HHPanningTableViewCellDirectionRight hidden:NO];
 		}
 
 		self.animationInProgress = YES;
@@ -391,8 +396,8 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 
         void (^completion)(BOOL finished) = ^(BOOL finished) {
             [drawerView removeFromSuperview];
-            self.rightDrawerView.hidden = YES;
-            self.leftDrawerView.hidden = YES;
+            [self setDrawer:HHPanningTableViewCellDirectionLeft hidden:YES];
+            [self setDrawer:HHPanningTableViewCellDirectionRight hidden:YES];
             
             [shadowView removeFromSuperview];
 
@@ -541,8 +546,8 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
 			containerViewFrame.origin.x = rightLimit;
 		}
 
-        self.leftDrawerView.hidden = (containerViewFrame.origin.x < 0);
-        self.rightDrawerView.hidden = (containerViewFrame.origin.x > 0);
+        [self setDrawer:HHPanningTableViewCellDirectionLeft hidden:(containerViewFrame.origin.x < 0)];
+        [self setDrawer:HHPanningTableViewCellDirectionRight hidden:(containerViewFrame.origin.x > 0)];
 
 		[containerView setFrame:containerViewFrame];
 	}

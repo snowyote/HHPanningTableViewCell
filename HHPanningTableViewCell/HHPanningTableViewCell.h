@@ -59,6 +59,8 @@ typedef enum {
 - (void)setDrawerRevealed:(BOOL)revealed animated:(BOOL)animated;
 - (void)setDrawerRevealed:(BOOL)revealed direction:(HHPanningTableViewCellDirection)direction animated:(BOOL)animated;
 
+- (void)setDrawer:(HHPanningTableViewCellDirection)direction hidden:(BOOL)hidden;
+
 @end
 
 
