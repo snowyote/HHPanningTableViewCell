@@ -536,8 +536,22 @@ static HHPanningTableViewCellDirection HHOppositeDirection(HHPanningTableViewCel
         CGFloat maximumPan = self.maximumPan;
         CGFloat width = (maximumPan > 0.0f) ? maximumPan : self.bounds.size.width;
 		NSInteger directionMask = self.directionMask;
-		CGFloat leftLimit = (directionMask & HHPanningTableViewCellDirectionLeft) ? (-1.0 * width) : 0.0f;
-		CGFloat rightLimit = (directionMask & HHPanningTableViewCellDirectionRight) ? width : 0.0f;
+        
+		CGFloat leftLimit = 0.0f;
+        if (directionMask & HHPanningTableViewCellDirectionLeft) {
+            leftLimit = -width;
+            if (self.rightDrawerView && self.boundPanByDrawerSize) {
+                leftLimit = -self.rightDrawerView.bounds.size.width;
+            }
+        }
+        
+		CGFloat rightLimit = 0.0f;
+        if (directionMask & HHPanningTableViewCellDirectionRight) {
+            rightLimit = width;
+            if (self.leftDrawerView && self.boundPanByDrawerSize) {
+                rightLimit = self.leftDrawerView.bounds.size.width;
+            }
+        }
         
 		if (containerViewFrame.origin.x <= leftLimit) {
 			containerViewFrame.origin.x = leftLimit;
